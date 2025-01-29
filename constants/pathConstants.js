@@ -15,8 +15,8 @@ export const PATHS = {
 
 
 
-  BASEURL:'http://192.168.220.215:8000',
-  BASE_IMAGe_URL:'http://192.168.220.215:8000/image/',
+  BASEURL:'http://192.168.110.215:8000',
+  BASE_IMAGe_URL:'http://192.168.110.215:8000/image/',
 
 
 

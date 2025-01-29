@@ -58,7 +58,7 @@ export default function Profile() {
                     uri: 'https://img.freepik.com/premium-vector/hipster-frofile-hat-with-glasses_6229-762.jpg',
                 }}
             />
-            <Text style={styles.profiletext}>{user.name}</Text>
+            <Text style={styles.profiletext}>{user?.name}</Text>
             <View style={styles.btnperents}>
                 <TouchableOpacity style={styles.storyBox} onPress={()=>{setVisible(true)}}>
                     <FontAwesome name="plus" style={styles.icon} />
