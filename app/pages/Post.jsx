@@ -1,23 +1,43 @@
-import { StyleSheet, Text, View, TextInput, Image, Button } from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  Switch, ScrollView 
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useUserSessions } from "../../hooks/useUserSessions";
 import { useNavigate } from "react-router-native";
+import { useUserSessions } from "../../hooks/useUserSessions";
 import { PATHS } from "@/constants/pathConstants";
-import { useState, useEffect } from "react";
+import AddPost from '../component/AddPost'
+import AddDonateFood from '../component/AddDonatefood'
 
 export default function Post() {
-  const [postImg, setPostImg] = useState(null);
-  const [text, setText] = useState("");
   const navigate = useNavigate();
   const { user, isLoading } = useUserSessions();
 
+  const [toggle, setToggle] = useState(true);
+  const [formData, setFormData] = useState({
+    text: "",
+    foodName: "",
+    description: "",
+    quantity: "",
+    expiryDate: new Date(),
+    location: "",
+    postImg: null,
+  });
+  const handleInputChange = (key, value) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
   useEffect(() => {
     if (!isLoading && !user) {
-     return navigate(PATHS.LOGIN);
+      navigate(PATHS.LOGIN);
     }
   }, [isLoading, user, navigate]);
 
-  const fetchImage = async () => {
+
+  const fetchImage = useCallback(async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       alert("Permission to access the media library is required!");
@@ -29,74 +49,134 @@ export default function Post() {
       allowsEditing: true,
       quality: 1,
     });
-console.log(result)
+
     if (!result.canceled) {
-      setPostImg(result.assets[0]);
+      handleInputChange("postImg", result.assets[0]);
     }
-  };
-
-  const handlePost = () => {
-    if (!postImg) {
-      alert("An image must be uploaded before posting.");
-      fetchImage();
-      return;
-    }
-
-    if (!text.trim()) {
-      alert("Please write a caption before posting.");
-      return;
-    }
-
-    // navigate(PATHS.PROFILE);
-    alert("Post submitted successfully!");
-  };
-
-  useEffect(() => {
-    fetchImage();
   }, []);
 
+
+
+
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Write a caption..."
-        value={text}
-        onChangeText={setText}
-        multiline
-        numberOfLines={5}
-        maxLength={280} // Optional: Add a character limit for captions
-      />
+    <ScrollView style={styles.container}>
+      <View style={styles.toggle}>
+        <Text style={styles.toggleText}>{toggle ? "Post" : "Food Donate"}</Text>
+        <Switch
+          value={toggle}
+          onValueChange={() => setToggle(!toggle)}
+          trackColor={{ false: PATHS.secColor ,true: PATHS.secColor }}
+          thumbColor={PATHS.mainColor}
+        />
+      </View>
 
-      {postImg && (
-        <Image source={{ uri: postImg.uri }} style={styles.profileImage} />
+      {toggle ? (
+        <AddPost 
+          formData={formData} 
+          handleInputChange={handleInputChange} 
+          fetchImage={fetchImage} 
+          
+        />
+      ) : (
+        <AddDonateFood 
+          formData={formData} 
+          handleInputChange={handleInputChange} 
+          fetchImage={fetchImage}
+         
+        />
       )}
-
-      <Button title="Post" onPress={handlePost} />
-    </View>
+    </ScrollView>
   );
 }
+
+
+
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+    marginBottom:50,
+  
   },
   textInput: {
-    height: 150,
+    height: 50,
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
     padding: 10,
-    textAlignVertical: "top", // Ensures text starts at the top
+    textAlignVertical: "top",
     fontSize: 16,
   },
-  profileImage: {
-    width: "100%",
-    height: 400,
-    resizeMode: "cover",
+  image: {
+    height: 340,
+    width: 327,
+    marginVertical: 5,
+    borderRadius: 10,
+  },
+  icon: {
+    color: PATHS.mainColor,
+    fontSize: 80,
+    textAlign: "center",
+    justifyContent:'center',
+    marginVertical: 50,
+  },
+  iconBox: {
+
+    alignItems: "center",
+    justifyContent: "center",
+    height: 200,
+  },
+  toggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    backgroundColor: "#fff",
     borderRadius: 8,
+    borderWidth: 1,
     marginBottom: 20,
   },
+  toggleText: {
+    fontSize: 19,
+    fontWeight: "500",
+    color: "#333",
+  },
+  locationBox: {
+    flexDirection: "row",
+    alignItems: "center",
+  
+    borderColor: "#ccc",
+   
+
+    marginBottom: 10,
+  },
+
+    mapbtn: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center', 
+      textAlign: 'center',
+      backgroundColor: PATHS.mainColor,
+      padding:10,
+      borderRadius:10,
+      marginBottom:10,
+      height:50,
+      marginLeft:5
+      
+    },
+    submitbtn:{
+      backgroundColor:PATHS.mainColor,
+      padding:10,
+      borderRadius:10
+    },
+    text:{
+      color:'white',
+      fontSize:15,
+      textAlign:'center'
+    }
 });

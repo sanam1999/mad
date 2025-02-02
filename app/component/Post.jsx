@@ -4,187 +4,200 @@ import { PATHS } from "@/constants/pathConstants";
 import Dialog from 'react-native-dialog';
 import { useUserSessions } from "@/hooks/useUserSessions";
 
-export default function Post({postsData}) {
-const { user,isLoading } = useUserSessions();
-    // State to control the visibility of the dialog
-    const [visible, setVisible] = useState(false);
-    const [donate, setDonate] = useState({doname:"",donameamount:0}); // State to store the donation input
- 
+export default function Post({ postsData }) {
+  const { user, isLoading } = useUserSessions();
+  const [visible, setVisible] = useState(false);
+  const [donate, setDonate] = useState({ doname: "", donameamount: 0 });
 
-    // Function to show the donation dialog
-    const donatenow = (userid) => {
-        setDonate({ ...donate, doname: userid,});
-        setVisible(true);
-    };
+  const donatenow = (userid) => {
+    setDonate({ ...donate, doname: userid });
+    setVisible(true);
+  };
 
-    // Function to handle donation submission
-    const handleSubmit = () => {
-        console.log(donate);
-        setVisible(false);
-        setDonate({ ...donate, doname:"",donameamount:0});
-      
-    };
+  const handleSubmit = () => {
+    console.log(donate);
+    setVisible(false);
+    setDonate({ ...donate, doname: "", donameamount: 0 });
+  };
 
+  if (isLoading) {
+    return <Text style={styles.isLoading}>Loading...</Text>;
+  }
 
-    return (  isLoading ? <Text style={styles.isLoading}> Loading...</Text> : (
-        <View style={styles.container}>
-           {postsData?.map((post, index) => (
-    <View key={index} style={styles.content}>
-        <View style={styles.header}>
-            <View style={styles.userbox}>
-            <Image 
-                source={{ uri: post.profile.imageUrl }} 
-                style={styles.profileImage} 
-            />
-            <View>
-            <Text style={styles.username}>{post.profile.username}</Text>
-            <Text style={styles.date} >2020-02-90</Text>
+  return (
+    <View style={styles.container}>
+      {postsData?.map((post, index) => (
+        <View key={index} style={styles.postContainer}>
+          {/* Post Header */}
+          <View style={styles.header}>
+            <View style={styles.userInfo}>
+              <Image
+                source={{ uri: post.profile.imageUrl }}
+                style={styles.profileImage}
+              />
+              <View>
+                <Text style={styles.username}>{post.profile.username}</Text>
+                <Text style={styles.date}>2020-02-90</Text>
+              </View>
             </View>
-            </View>
-            {user._id == post.profile._id ? (
-                <View style={ styles.donate}>
-                    <Text style={ styles.totaldonation}>
-                    Total donated: $200
-                    </Text>
-                </View>
+            {user._id === post.profile._id ? (
+              <View style={styles.donationInfo}>
+                <Text style={styles.totalDonation}>Total donated: $200</Text>
+              </View>
             ) : (
-            <TouchableOpacity style={styles.donate} onPress={() =>donatenow(post.profile._id)}>
-                <Text style={styles.donatetext}>
-                    Donate now
-                </Text>
-            </TouchableOpacity>
-        )}
+              <TouchableOpacity
+                style={styles.donateButton}
+                onPress={() => donatenow(post.profile._id)}
+              >
+                <Text style={styles.donateButtonText}>Donate now</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Post Content */}
+          <Text style={styles.postText}>{post.postText}</Text>
+          <Image
+            source={{ uri: post.postImageUrl }}
+            style={styles.postImage}
+          />
+
+         
         </View>
-        <Text style={styles.postText}>
-            {post.postText}
-        </Text>
-        <View style={styles.imageContainer}>
-            <Image 
-                source={{ uri: post.postImageUrl }} 
-                style={styles.postImage} 
-            />
-        </View>
-        <View style={styles.horizontalLine} />
+      ))}
+
+      {/* Donation Dialog */}
+      <Dialog.Container visible={visible}>
+        <Dialog.Title style={styles.dialogTitle}>Enter Donation Amount</Dialog.Title>
+        <Dialog.Input
+          placeholder="Enter amount"
+          keyboardType="numeric"
+          value={donate.donameamount.toString()}
+          onChangeText={(text) => {
+            const parsedValue = parseInt(text, 10);
+            setDonate({
+              ...donate,
+              donameamount: isNaN(parsedValue) ? 0 : parsedValue,
+            });
+          }}
+          style={styles.dialogInput}
+        />
+        <Dialog.Button
+          label="Cancel"
+          onPress={() => setVisible(false)}
+          style={styles.dialogCancelButton}
+        />
+        <Dialog.Button
+          label="Donate"
+          onPress={handleSubmit}
+          style={styles.dialogDonateButton}
+        />
+      </Dialog.Container>
     </View>
-
-  
-))}
-
-           
-
-            {/* Donation Dialog */}
-            <Dialog.Container visible={visible}>
-                <Dialog.Title style={styles.Dialog}>Enter Donation Amount</Dialog.Title>
-                <Dialog.Input
-                    placeholder="Enter amount"
-                    keyboardType="numeric"
-                    value={donate.donameamount.toString()} // Convert to string for display
-                    color="black"
-                    onChangeText={(text) => {
-                        // Ensure the value is a valid integer
-                        const parsedValue = parseInt(text, 10);
-                        setDonate({ ...donate, donameamount: isNaN(parsedValue) ? 0 : parsedValue });
-                    }}
-                />
-                <Dialog.Button label="Cancel" onPress={()=>{setVisible(false);}} />
-                <Dialog.Button label="Donate" onPress={handleSubmit} />
-            </Dialog.Container>
-        </View>
-     ) );
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 15,
-        backgroundColor: '#fff',
-        marginBottom: 90
-    },
-    content: {
-        marginBottom: 5,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent:'space-between'
-    },
-    profileImage: {
-        width: 40,
-        height: 40,
-        borderRadius: 25, // Circle shape
-        marginRight: 10,
-    },
-   
-    username: {
-        fontWeight: 'bold',
-        fontSize: 20,
-    },
-    postText: {
-        fontSize: 14,
-        color: '#333',
-        marginTop: 2,
-        textAlign:'justify',
-        marginTop:5,
-        marginBottom:7
-    },
-    imageContainer: {},
-    postImage: {
-        width: '100%',
-        height: 500,
-        resizeMode: 'cover',
-        borderRadius: 5,
-    },
-    iconContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 8,
-    },
-    icon: {
-        fontSize: 24,
-        color: '#333',
-    },
-    donate: {
-      
-        
-    },
-    donatetext: {
-        fontWeight: "bold",
-        textAlign: "center",
-        paddingHorizontal: 15,
-        paddingVertical: 5,
-        backgroundColor: PATHS.secColor,
-        color: 'white',
-        borderRadius: 4
-
-    },
-    Dialog:{
-        color:'black'
-    },
-    horizontalLine: {
-        marginTop:10,
-        width: '100%', // Adjust width as needed
-        height: 1.3,    // Thickness of the line
-        backgroundColor: '#000', // Color of the line
-      },
-      date:{
-        color:'black',
-
-        fontSize:12
-      },
-      isLoading:{
-       margin:110,
-       fontSize:40,
-       width:200
-      },
-      totaldonation:{
-        fontWeight: "bold",
-        textAlign: "center",
-        paddingHorizontal: 15,
-        paddingVertical: 5,
-        backgroundColor: PATHS.secColor,
-        color: 'white',
-        borderRadius: 4
-      },
-      userbox:{
-        flexDirection:'row'
-      }
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  postContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  username: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+  },
+  date: {
+    fontSize: 12,
+    color: '#666',
+  },
+  donationInfo: {
+    backgroundColor: PATHS.secColor,
+    borderRadius: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  totalDonation: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ffffff',
+  },
+  donateButton: {
+    backgroundColor: PATHS.mainColor,
+    borderRadius: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  donateButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ffffff',
+  },
+  postText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+  postImage: {
+    width: '100%',
+    height: 300,
+    borderRadius: 10,
+    marginBottom: 12,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#e0e0e0',
+    marginVertical: 12,
+  },
+  dialogTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+  },
+  dialogInput: {
+    fontSize: 16,
+    color: '#333',
+  },
+  dialogCancelButton: {
+    color: '#666',
+  },
+  dialogDonateButton: {
+    color: PATHS.secColor,
+    fontWeight: '600',
+  },
+  isLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 18,
+    color: '#666',
+  },
 });

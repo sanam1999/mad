@@ -185,7 +185,7 @@ export default function Home() {
 
   // Redirect to login if not authenticated
   if (!isLoading && !user) {
-    navigate(PATHS.LOGIN);
+   return  navigate(PATHS.LOGIN);
   }
 
   // Show loading spinner while data is being fetched

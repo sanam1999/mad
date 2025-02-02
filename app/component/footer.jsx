@@ -24,7 +24,7 @@ export default function Footer() {
          </Link>
        </TouchableOpacity>
        <TouchableOpacity>
-         <Link to={PATHS.LOGIN} underlayColor="#ddd">
+         <Link to={PATHS.Volunteer} underlayColor="#ddd">
            <View style={styles.linkContent}>
            <FontAwesome name="lightbulb-o" style={styles.icon} />
              <Text style={styles.navText}>Solution</Text>

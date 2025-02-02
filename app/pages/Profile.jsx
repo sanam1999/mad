@@ -42,144 +42,161 @@ const postsData = [
 ]
 
 export default function Profile() {
-   const [visible, setVisible] = useState(false);
-    let navigate = useNavigate();
-    const { user, isLoading, editUser } = useUserSessions();
-    if (!isLoading && !user) {
-        navigate(PATHS.LOGIN);
-    }
-  
-    return (
+  const [visible, setVisible] = useState(false);
+  let navigate = useNavigate();
+  const { user, isLoading, editUser } = useUserSessions();
+  if (!isLoading && !user) {
+    navigate(PATHS.LOGIN);
+  }
+
+  return (
     <ScrollView style={styles.container}>
-        <View style={styles.profilebox}>
-            <Image
-                style={styles.profileimg}
-                source={{
-                    uri: 'https://img.freepik.com/premium-vector/hipster-frofile-hat-with-glasses_6229-762.jpg',
-                }}
-            />
-            <Text style={styles.profiletext}>{user?.name}</Text>
-            <View style={styles.btnperents}>
-                <TouchableOpacity style={styles.storyBox} onPress={()=>{setVisible(true)}}>
-                    <FontAwesome name="plus" style={styles.icon} />
-                    <Text style={styles.btnText}>Add to story</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity style={styles.storyBox} onPress={()=>navigate(PATHS.POST)}>
-                        <FontAwesome name="plus" style={styles.icon} />
-                        <Text style={styles.btnText}>Add post</Text>
-                </TouchableOpacity>
-            </View>
+      {/* Profile Section */}
+      <View style={styles.profileContainer}>
+        <Image
+          style={styles.profileImage}
+          source={{
+            uri: 'https://img.freepik.com/premium-vector/hipster-frofile-hat-with-glasses_6229-762.jpg',
+          }}
+        />
+        <Text style={styles.profileName}>{user?.name}</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => setVisible(true)}>
+            <FontAwesome name="plus" style={styles.buttonIcon} />
+            <Text style={styles.buttonText}>Add to Story</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton} onPress={() => navigate(PATHS.POST)}>
+            <FontAwesome name="plus" style={styles.buttonIcon} />
+            <Text style={styles.buttonText}>Add Post</Text>
+          </TouchableOpacity>
         </View>
-         
-    <View style={styles.horizontalLine} />
-    <View style={styles.container2}>
-  <View style={styles.donationBox}>
-    <FontAwesome name="money" style={styles.icon2} />
-    <Text style={styles.donationText}>Total Donations</Text>
-    <Text style={styles.donationHours}>$ 25</Text>
-  </View>
-  <View style={styles.donationBox}>
-    <FontAwesome name="handshake-o" style={styles.icon2} />
-    <Text style={styles.donationText}>Volunteer Hours</Text>
-    <Text style={styles.donationHours}>25 hours</Text>
-  </View>
-</View>
-<AddStory visible={visible} setVisible={setVisible}/>
-<Post postsData={postsData}/>
+      </View>
+
+      {/* Divider */}
+      <View style={styles.divider} />
+
+      {/* Donation and Volunteer Section */}
+      <View style={styles.statsContainer}>
+        <View style={styles.statBox}>
+          <FontAwesome name="money" style={styles.statIcon} />
+          <Text style={styles.statText}>Total Donations</Text>
+          <Text style={styles.statValue}>$ 25</Text>
+        </View>
+        <View style={styles.statBox}>
+          <FontAwesome name="handshake-o" style={styles.statIcon} />
+          <Text style={styles.statText}>Volunteer Hours</Text>
+          <Text style={styles.statValue}>25 hours</Text>
+        </View>
+      </View>
+
+      {/* Modals */}
+      <AddStory visible={visible} setVisible={setVisible} />
+      <Post postsData={postsData} />
     </ScrollView>
   );
-};
-
+}
 
 const styles = StyleSheet.create({
   container: {
-   
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
-  profileimg:{
-    height:190,
-    width:190,
-    borderRadius:100,
-    borderColor:10,
-    borderWidth:5,
-    borderColor:PATHS.mainColor,
-  },
-  profilebox:{
-    marginTop:30,
-    marginLeft:5
-  },
-  profiletext:{
-    marginTop:8,
-    fontSize:25,
-    fontWeight:500,
-    marginLeft:15
-  },
-  icon:{
-    color:'white',
-    marginRight:8,
-    fontSize:20,
-    fontWeight:'200'
-  },
-  btnperents:{
-    flexDirection:'row',
-    justifyContent:'space-evenly',
-    marginTop:15
-
-  },
-  storyBox: {
-    flexDirection: 'row', // Aligns icon and text horizontally
-    alignItems: 'center', 
-   justifyContent:'center',
-    padding: 8,
+  profileContainer: {
+    alignItems: 'center',
+    paddingVertical: 30,
     backgroundColor: '#ffffff',
-    borderRadius: 8,
-    width:140,
+    borderRadius: 10,
+    margin: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    backgroundColor:PATHS.mainColor,
-    
+    shadowRadius: 6,
+    elevation: 3,
   },
-  btnText:{
-    fontSize:20,
-    fontWeight:400,
-    color:'white'
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 4,
+    borderColor: PATHS.mainColor,
   },
-  horizontalLine: {
-    marginTop:8,
-    width: '97%', // Adjust width as needed
-    height: 1.3,    // Thickness of the line
-    backgroundColor: '#000', // Color of the line
-    paddingHorizontal:5,
-    marginLeft:5
-
+  profileName: {
+    marginTop: 15,
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#333',
   },
-  
-  container2: {
-    marginTop:8,
-    flexDirection: 'row', 
-    justifyContent:'space-around'
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    width: '100%',
+    paddingHorizontal: 20,
   },
-  donationBox: {
-  justifyContent:'space-evenly',
-    width:150,
-    height:130,
-    backgroundColor:PATHS.mainColor,
-    borderRadius:13
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: PATHS.mainColor,
+    borderRadius: 25,
+    width: '45%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  icon2: {
-    color: 'white',
-    fontSize: 50,
-    textAlign:'center',
-  },
-  donationText: {
+  buttonIcon: {
+    color: '#ffffff',
     fontSize: 18,
-    textAlign:'center',
-    fontWeight: '500',
-    color: 'white',
+    marginRight: 8,
   },
-  donationHours: {
+  buttonText: {
     fontSize: 16,
-    textAlign:'center',
-    color: 'white',
+    fontWeight: '500',
+    color: '#ffffff',
   },
-
+  divider: {
+    height: 1,
+    backgroundColor: '#e0e0e0',
+    marginVertical: 20,
+    marginHorizontal: 15,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginHorizontal: 15,
+  },
+  statBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '45%',
+    padding: 20,
+    backgroundColor: PATHS.mainColor,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statIcon: {
+    color: '#ffffff',
+    fontSize: 40,
+    marginBottom: 10,
+  },
+  statText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#ffffff',
+    marginTop: 5,
+  },
 });

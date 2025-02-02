@@ -6,7 +6,7 @@ import About from "./pages/About";
 import Post from "./pages/Post";
 import Updateprofile from './pages/UpdateProfile'
 import Wallet from "./pages/Wallet";
-import Solution from "./pages/Solution";
+import Volunteer from "./pages/Volunteer";
 import ChangePassword from './pages/ChangePassword'
 import Singup  from "./pages/Singup";
 import Login  from "./pages/Login";
@@ -41,6 +41,7 @@ export default function Layout() {
         <Route path={PATHS.UPDATEPROFILE} element={< Updateprofile />} />
         <Route path={PATHS.CHANGEPASSWORD} element={< ChangePassword />} />
         <Route path={PATHS.PROFILE} element={< Profile />} />
+        <Route path={PATHS.Volunteer} element={< Volunteer />} />
       </Routes>
     </QueryClientProvider>
   );

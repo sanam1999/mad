@@ -12,7 +12,7 @@ export default function Header() {
       <View style={styles.navContainer}>
       <Image 
           style={styles.logo} 
-          // source={require('../../assets/images/icon1.png')} 
+        source={require('../../assets/images/icon1.png')} 
         />
          <Text style={styles.navText}>Zero Hunger</Text>
       </View>

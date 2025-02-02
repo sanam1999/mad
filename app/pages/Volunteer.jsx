@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useUserSessions } from "../../hooks/useUserSessions";
 import { useNavigate } from "react-router-native"; 
 import { PATHS } from "@/constants/pathConstants";
-export default function Solution(props) {
+export default function Volunteer(props) {
     let navigate = useNavigate();
     const { user, isLoading,editUser } = useUserSessions();
     !isLoading && !user ? (navigate(PATHS.LOGIN)) : " ";
