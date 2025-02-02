@@ -4,6 +4,7 @@ import { NativeRouter } from "react-router-native";
 import Layout from "./layout";
 import Header from "./component/header";
 import Footer from "./component/footer";
+import {Text} from 'react-native'
 
 export default function App() {
   
@@ -13,6 +14,8 @@ export default function App() {
     <NativeRouter>
       <Header />
       <Layout />
+      <Text>
+      </Text>
       <Footer />
       <StatusBar style="auto" />
     </NativeRouter>

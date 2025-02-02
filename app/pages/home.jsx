@@ -182,13 +182,10 @@ export default function Home() {
   const navigate = useNavigate();
   const { user, isLoading } = useUserSessions();
 
-
-  // Redirect to login if not authenticated
   if (!isLoading && !user) {
    return  navigate(PATHS.LOGIN);
   }
 
-  // Show loading spinner while data is being fetched
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
