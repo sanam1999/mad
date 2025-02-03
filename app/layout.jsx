@@ -12,28 +12,17 @@ import Singup  from "./pages/Singup";
 import Login  from "./pages/Login";
 import Profile from './pages/Profile'
 
-
-import { useNavigate } from "react-router-native"; 
 import { PATHS } from "@/constants/pathConstants";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 
 export default function Layout() {
-  const [name, setName] = useState("sanam");
-  // Initialize QueryClient
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
+
   return (
-    <QueryClientProvider client={client}>
+   
       <Routes>
-      <Route path={PATHS.SETTING} element={<Setiins changename={setName} />} />
-        <Route path={PATHS.HOME} element={<Home username={name} />} />
-        <Route path={PATHS.ABOUT} element={<About username={name} />} />
+      <Route path={PATHS.SETTING} element={<Setiins  />} />
+        <Route path={PATHS.HOME} element={<Home  />} />
+        <Route path={PATHS.ABOUT} element={<About />} />
         <Route path={PATHS.WALLET} element={<Wallet/>} />
         <Route path={PATHS.LOGIN} element={<Login />} />
         <Route path={PATHS.POST} element={<Post />} />
@@ -43,7 +32,7 @@ export default function Layout() {
         <Route path={PATHS.PROFILE} element={< Profile />} />
         <Route path={PATHS.Volunteer} element={< Volunteer />} />
       </Routes>
-    </QueryClientProvider>
+
   );
 }
 
