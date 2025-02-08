@@ -10,7 +10,7 @@ export default function Footer() {
   const location = useLocation();
 
   const getActiveStyle = (path) => {
-    return location.pathname === path ? { color: "yellow"} : {};
+    return location.pathname === path ? { color: PATHS.HIGHLIGHT} : {};
   };
 
   return (

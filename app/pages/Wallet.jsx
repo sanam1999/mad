@@ -7,19 +7,19 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Deposit, Withdrawal,Sent, Request} from "../component/Invoice";
 
 export default function Wallet() {
-    let navigate = useNavigate();
+  
     const [visibleD, setVisibleD] = useState(false);
     const [visibleW, setVisibleW] = useState(false);
     const [visibleS, setVisibleS] = useState(false);
     const [visibleQ, setVisibleQ] = useState(false);
-    const { user, isLoading } = useUserSessions();
 
-    // Handle navigation on user session state
-    useEffect(() => {
-        if (!isLoading && !user) {
-            navigate(PATHS.LOGIN);
-        }
-    }, [isLoading, user, navigate]);
+    let navigate = useNavigate();
+    const { user, isLoading } = useUserSessions();
+  useEffect(()=>{
+      if (!isLoading && !user) {
+          return  navigate(PATHS.LOGIN);
+         }
+  },[isLoading,user,navigate])
     // If still loading, return a placeholder
     if (isLoading) {
         return (

@@ -4,13 +4,17 @@ import { PATHS } from "@/constants/pathConstants";
 import Dialog from "react-native-dialog";
 import { useUserSessions } from "@/hooks/useUserSessions";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useNavigate } from "react-router-native";
 
 export default function FoodVolunteer({ foodPosts }) {
   const { user, isLoading } = useUserSessions();
   const [visible, setVisible] = useState(false);
   const [location, setlocation] = useState("")
   const [donate, setDonate] = useState({ doname: "", donameamount: 0 });
+  let navigate = useNavigate();
 
+
+    
   const donatenow = (userid,locatio) => {
     setDonate({ ...donate, doname: userid });
     setlocation(locatio)
@@ -21,6 +25,10 @@ export default function FoodVolunteer({ foodPosts }) {
     console.log(donate);
     setVisible(false);
     setDonate({ ...donate, doname: "", donameamount: 0 });
+    navigate(PATHS.ACTIVEVOLUNTEERL);
+
+
+
   };
 
   if (isLoading) {

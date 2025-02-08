@@ -37,12 +37,12 @@ export default function Login() {
                 const {data , error , isError} = await postReq('/user/login', userData);
                 if(!isError){
                     console.log(data)
-                    alert("welcome")
+                    alert("Welcome Back "+ data.user.name)
                     await AsyncStorage.setItem('userSession', JSON.stringify(data.user));
                     console.log(data)
                     navigate('/');
                 }else{
-                    console.log("felse")
+                  
                     alert(error)
                 }
             } catch (error) {
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         padding: 20,
+       
     },
     Subcontainer: {
         width: "100%",

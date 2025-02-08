@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-native";
 import Setiins from "./pages/Setiins";
 import Home from "./pages/home";
-import { useState } from "react";
 import About from "./pages/About";
 import Post from "./pages/Post";
 import Updateprofile from './pages/UpdateProfile'
@@ -11,14 +10,11 @@ import ChangePassword from './pages/ChangePassword'
 import Singup  from "./pages/Singup";
 import Login  from "./pages/Login";
 import Profile from './pages/Profile'
-
+import ActiveVolunteer from './pages/Activevolunteer'
 import { PATHS } from "@/constants/pathConstants";
 
-
 export default function Layout() {
-
   return (
-   
       <Routes>
       <Route path={PATHS.SETTING} element={<Setiins  />} />
         <Route path={PATHS.HOME} element={<Home  />} />
@@ -31,8 +27,8 @@ export default function Layout() {
         <Route path={PATHS.CHANGEPASSWORD} element={< ChangePassword />} />
         <Route path={PATHS.PROFILE} element={< Profile />} />
         <Route path={PATHS.Volunteer} element={< Volunteer />} />
+        <Route path={PATHS.ACTIVEVOLUNTEERL} element={< ActiveVolunteer />} />
       </Routes>
-
   );
 }
 

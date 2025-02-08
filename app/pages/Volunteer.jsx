@@ -3,6 +3,7 @@ import { useUserSessions } from "../../hooks/useUserSessions";
 import { useNavigate } from "react-router-native";
 import { PATHS } from "@/constants/pathConstants";
 import FoodVolunteer from '../component/FoodDonate'
+import { useEffect } from "react";
 const foodPosts = [
   {
     
@@ -166,10 +167,15 @@ const foodPosts = [
     picupuser_id: "k7l8m9n0"
   }
 ];
-export default function Volunteer(props) {
+export default function Volunteer() {
   let navigate = useNavigate();
-  const { user, isLoading, editUser } = useUserSessions();
-  !isLoading && !user ? navigate(PATHS.LOGIN) : " ";
+
+  const { user, isLoading } = useUserSessions();
+   useEffect(()=>{
+       if (!isLoading && !user) {
+           return  navigate(PATHS.LOGIN);
+          }
+   },[isLoading,user,navigate])
 
   return (
     <ScrollView style={styles.container}>
@@ -186,9 +192,7 @@ export default function Volunteer(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa", // Light background for better contrast
-    // alignItems: "center",
-    
+    backgroundColor: "#f8f9fa",
     padding: 20,
   },
   totalV: {

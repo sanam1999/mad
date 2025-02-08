@@ -20,7 +20,7 @@ export default function Header() {
           style={styles.logo} 
         source={require('../../assets/images/icon1.png')} 
         />
-         <Text style={styles.navText}>ShareBite</Text>
+         <Text style={styles.navText}>Flash Food</Text>
       </View>
        </Link>
              </TouchableOpacity>
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
    
   },
   logo: {
-    height:30,
-    width:30,
+    height:35,
+    width:35,
     color:"white",
     color: "#fff", 
     marginHorizontal:13,

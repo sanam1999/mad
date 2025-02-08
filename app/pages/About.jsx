@@ -1,18 +1,12 @@
-import { useUserSessions } from "../../hooks/useUserSessions";
-import { useNavigate } from "react-router-native"; 
 import { PATHS } from "@/constants/pathConstants";
 import React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useState, useEffect } from "react";
+import {  useEffect } from "react";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 
 export default function About() {
-  let navigate = useNavigate();
-  const { user, isLoading, editUser } = useUserSessions();
-  !isLoading && !user ? navigate(PATHS.LOGIN) : " ";
-
   const animatedValue = React.useRef(new Animated.Value(0)).current;
 
 
@@ -118,8 +112,6 @@ export default function About() {
         source={{ uri: 'https://static.vecteezy.com/system/resources/previews/027/012/938/non_2x/hungry-starving-poor-little-child-looking-at-the-camera-photo.jpg' }}
         style={styles.heroImage}
       />
-
-      {/* Mission Section with Image */}
       <View style={styles.missionSection}>
         <Image
           source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG9RR8t16QX9Ag9a_AydFoU8sfKHpfdDuZQg&s' }}

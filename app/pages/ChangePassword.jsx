@@ -1,24 +1,16 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
-import { useUserSessions } from "../../hooks/useUserSessions";
-import { useNavigate } from "react-router-native";
 import { PATHS } from "@/constants/pathConstants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { postReq } from "../../hooks/useQuery";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export default function ChangePassword() {
-  const navigate = useNavigate();
-  const { user, isLoading, editUser } = useUserSessions();
+
   
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  if (!isLoading && !user) {
-    navigate(PATHS.LOGIN);
-    return null;
-  }
 
   const handleChangePassword = async () => {
     if (newPassword === "" || newPassword !== confirmPassword || oldPassword === "") {

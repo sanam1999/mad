@@ -50,14 +50,12 @@ export default function Signup() {
                 const {data , error , isError} = await postReq('/user/signup', userData);
                 if(!isError){
                     await AsyncStorage.setItem('userSession', JSON.stringify(data.user));
-                    console.log(data)
-                    alert("welcome")
+                    console.log(data.user)
+                    alert("Welcome "+ Name)
                     navigate('/');
                 }else{
                     alert(error)
                 }
-                
-
             } catch (error) {
                 alert("Error adding user or saving session:");
             }
@@ -148,6 +146,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         padding: 20,
+         position:'static'
     },
     Subcontainer: {
         width: "100%",

@@ -10,18 +10,38 @@ export const PATHS = {
   UPDATEPROFILE: '/updateprofile',
   CHANGEPASSWORD: '/changepassword',
   SETTING:'/setting',
+  ACTIVEVOLUNTEERL:'/activevolunteer' ,
 
 
 
 
 
-  BASEURL:'http://192.168.133.215:8000',
-  BASE_IMAGe_URL:'http://192.168.133.215:8000/image/',
+  BASEURL:'http://192.168.32.215:8000',
+  BASE_IMAGe_URL:'http://192.168.32.215:8000/image/',
 
+
+
+  // mainColor:'#8808AF',
+  // secColor:'#FF9800',
+  // HIGHLIGHT: '#FFD700'
+
+
+  // mainColor:'#2a2b2a',
+  // secColor:'#FF9800',
+  // HIGHLIGHT: '#FFD700'
+
+ 
+
+  // mainColor:'#0a0a0a',
+  // secColor:'#8808AF',
+  // HIGHLIGHT: '#878282'
 
 
   mainColor:'#000080',
-  secColor:'#8808AF'
+  secColor:'#8808AF',
+  HIGHLIGHT: '#FFFF00'
+
+ 
   
 
 };

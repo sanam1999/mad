@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Modal, ActivityIndicator, ScrollView } from 'react-native';
-import { useUserSessions } from '../../hooks/useUserSessions';
-import { useNavigate } from 'react-router-native';
-import { PATHS } from '@/constants/pathConstants';
-
 export default function Story() {
   const [selectedStory, setSelectedStory] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -15,85 +11,85 @@ export default function Story() {
       id: '1',
       username: 'Saroj Shrestha',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
       ],
     },
     {
       id: '2',
       username: 'Sanam',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
       ],
     },
     {
       id: '3',
       username: 'Saroj Shrestha',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
       ],
     },
     {
       id: '4',
       username: 'Sanam',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
       ],
     },
     {
       id: '5',
       username: 'Saroj Shrestha',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
       ],
     },
     {
       id: '6',
       username: 'Sanam',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
       ],
     },
     {
       id: '7',
       username: 'Saroj Shrestha',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
       ],
     },
     {
       id: '8',
       username: 'Sanam',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
       ],
     },
     {
       id: '9',
       username: 'Saroj Shrestha',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
       ],
     },
     {
       id: '10',
       username: 'Sanam',
       storyImages: [
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
+        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
       ],
     },
   ];

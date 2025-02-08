@@ -1,35 +1,18 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
-import { NativeRouter } from "react-router-native"; 
+import { StatusBar } from "react-native";
+import { NativeRouter } from "react-router-native";
 import Layout from "./layout";
 import Header from "./component/header";
 import Footer from "./component/footer";
-import {Text} from 'react-native'
 
 export default function App() {
-  
-
-
   return (
     <NativeRouter>
+      {/* Correct way to set status bar color */}
+      <StatusBar backgroundColor="#545955" barStyle="light-content" />
+
       <Header />
       <Layout />
-      <Text>
-      </Text>
       <Footer />
-      <StatusBar style="auto" />
     </NativeRouter>
   );
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
-

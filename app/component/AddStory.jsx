@@ -1,5 +1,5 @@
 import Dialog from 'react-native-dialog';
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, TextInput, Image, Button, View,Touchable } from "react-native";
 import { PATHS } from '../../constants/pathConstants';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
