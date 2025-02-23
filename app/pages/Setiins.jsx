@@ -6,12 +6,13 @@ import { useUserSessions } from "../../hooks/useUserSessions";
 import { useNavigate } from "react-router-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
-
+import {getReq} from '../../hooks/useQuery'
 export default function Setiins() {
     let navigate = useNavigate();
-    const { user, isLoading, editUser } = useUserSessions();
+    const { user,isLoading, editUser } = useUserSessions();
 
     useEffect(() => {
+      
         if (!isLoading && !user) {
             navigate(PATHS.LOGIN);
         }
@@ -21,15 +22,37 @@ export default function Setiins() {
 
     let logoutbtn = async () => {
         try {
-            editUser(null);
-            await AsyncStorage.removeItem("userSession");
-            navigate("/");
+          
+          
+                      try {
+                            const response = await getReq('/user/logout');
+                            if( response.data.success ){
+                            await AsyncStorage.removeItem("userSession")
+                            navigate("/")  
+                        }else{
+                            console.log(response)
+                        }
+                            
+                         
+                      } catch (error) {
+                             alert(error)
+                        
+                      }
+                  
+              
+             
+
         } catch (e) {
             console.log(e);
         }
     };
+    if(!isLoading){
 
-    return (
+
+}
+    return ( isLoading ? (<View> 
+        <Text>Loading...</Text>
+        </View>):
        
             <View style={styles.container}>
                 <Link to={PATHS.PROFILE} underlayColor="#ddd">
@@ -37,10 +60,10 @@ export default function Setiins() {
                     <Image
                         style={styles.logo}
                         source={{
-                            uri: "https://img.freepik.com/premium-vector/hipster-frofile-hat-with-glasses_6229-762.jpg",
-                        }}
+                            uri: user.profileImage ? `${PATHS.BASEURL}${user.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s"
+                        }} 
                     />
-                    <Text style={styles.email}>{user?.email}</Text>
+                    <Text style={styles.email}>{user?.username}</Text>
                 </View>
                 </Link>
 
@@ -76,7 +99,7 @@ export default function Setiins() {
                 <TouchableOpacity onPress={logoutbtn} style={styles.log}>
                     <View style={styles.logout}>
                         <Text style={styles.logoutText}>Logout</Text>
-                        
+                      
                     </View>
                 </TouchableOpacity>
             </View>
@@ -160,6 +183,6 @@ const styles = StyleSheet.create({
         fontWeight: "500",
     },
     log:{
-        marginTop:320
+        marginTop:260
     }
 });

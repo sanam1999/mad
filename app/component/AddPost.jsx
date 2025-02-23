@@ -3,26 +3,57 @@ import { StyleSheet, Text, TextInput, Image, TouchableOpacity } from "react-nati
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { PATHS } from "@/constants/pathConstants";
 
-export default function AddPost({ formData, handleInputChange, fetchImage }) {
+
+
+export default function AddPost({ formData, handleInputChange, fetchImage,user, navigate}) {
   const [errors, setErrors] = useState({});
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     const newErrors = {};
-
     if (!formData.text) {
-      newErrors.text = 'Title is required';
+      newErrors.text = "Title is required";
     }
-
     if (!formData.postImg?.uri) {
-      newErrors.Image = 'Image is required';
+      newErrors.Image = "Image is required";
     }
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-    } else {
-      alert("Post submitted successfully!");
+      return;
+    }
+  
+    const formDataToSend = new FormData();
+    formDataToSend.append("text", formData.text);
+  
+    if (formData.postImg?.uri) {
+      formDataToSend.append("postImg", {
+        uri: formData.postImg.uri,
+        name: formData.postImg.fileName || `image_${Date.now()}.jpg`,
+        type: formData.postImg.mimeType || "image/jpeg",
+      });
+    }
+  
+    try {
+      const response = await fetch(`${PATHS.BASEURL}/user/addpost?id=${user._id}`, {
+        method: "POST",
+        body: formDataToSend,
+      });      
+  
+      const textResponse = await response.text();
+      console.log("Raw response:", textResponse); // Debugging
+  
+      const result = JSON.parse(textResponse);
+      if (response.ok) {
+        alert("Post submitted successfully!");
+                navigate(PATHS.PROFILE)
+      } else {
+        alert("Error: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting post:", error);
+      alert("Failed to submit post. Please try again.");
     }
   };
+  
 
   return (
     <>

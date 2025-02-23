@@ -31,7 +31,7 @@ export default function Footer() {
             <View style={styles.linkContent}>
               <View style={styles.notifid}><Text style={styles.notifidText}>8</Text></View>
               <FontAwesome name="lightbulb-o" style={[styles.icon, getActiveStyle(PATHS.Volunteer)]} />
-              <Text style={[styles.navText, getActiveStyle(PATHS.Volunteer)]}>Solution</Text>
+              <Text style={[styles.navText, getActiveStyle(PATHS.Volunteer)]}>Volunteer</Text>
             </View>
           </Link>
         </TouchableOpacity>

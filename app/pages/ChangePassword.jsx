@@ -3,10 +3,13 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-nativ
 import { PATHS } from "@/constants/pathConstants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { postReq } from "../../hooks/useQuery";
+import { useUserSessions } from "@/hooks/useUserSessions";
+import { useNavigate } from "react-router-native";
 
 
 export default function ChangePassword() {
-
+  const navigate = useNavigate();
+  const { user, isLoading, editUser } = useUserSessions();
   
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -20,7 +23,7 @@ export default function ChangePassword() {
 
     try {
       const userData = {
-        username: user.email,
+        username: user.username,
         currentPassword: oldPassword,
         newPassword: confirmPassword,
       };
@@ -34,7 +37,7 @@ export default function ChangePassword() {
         alert(message);
       }
     } catch (err) {
-      alert("Error updating password.");
+      alert("Error updating password."+err);
     }
   };
 

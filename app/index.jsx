@@ -1,4 +1,4 @@
-import { StatusBar } from "react-native";
+import { StatusBar} from "react-native";
 import { NativeRouter } from "react-router-native";
 import Layout from "./layout";
 import Header from "./component/header";
@@ -12,6 +12,7 @@ export default function App() {
 
       <Header />
       <Layout />
+    
       <Footer />
     </NativeRouter>
   );

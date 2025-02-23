@@ -1,89 +1,126 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Linking, Alert } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Linking, Alert, ScrollView } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { PATHS } from "@/constants/pathConstants";
+import { useUserSessions } from "@/hooks/useUserSessions";
+import { postReq, getReq } from "../../hooks/useQuery";
+import moment from 'moment-timezone';
+import { useNavigate } from "react-router-native";
 
-export default function ActiveVolunteer({ route }) {
-  let post = {
-    profile: {
-      _id: "67988e9738ae8ff4cd31b296",
-      username: "@user1",
-      imageUrl:
-        "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    foodName: "Apple Pie",
-    description: "Homemade with fresh apples and a flaky crust.",
-    quantity: "2",
-    location: "saliyala",
-    postImg:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxRmYX4OqLGoOrbQXe2XFcDAbNphmu7dgkdQ&s",
-    post_id: "67890",
-    user_id: "user123",
-    date: new Date("2023-10-26").toISOString(), // Store as ISO string
-    picupuser_id: "",
+export default function ActiveVolunteer() {
+  const [posts, setPosts] = useState([]);
+  const { user, isLoading } = useUserSessions();
+  const [timeSincePosts, setTimeSincePosts] = useState({});
+   let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && user?._id) {
+      getReq(`/user/activepost?_id=${user._id}`)
+        .then((data) => {
+          setPosts(data.data.data);
+
+          // Initialize time counters
+          const initialTimes = {};
+          data.data.data.forEach(post => {
+            initialTimes[post._id] = calculateTimeElapsed(post.updatedAt);
+          });
+          setTimeSincePosts(initialTimes);
+        })
+        .catch((e) => {
+          console.log(e);
+          Alert.alert("Error", "Failed to fetch posts.");
+        });
+    }
+  }, [isLoading, user?._id]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeSincePosts(prevTimes => {
+        const updatedTimes = {};
+        posts.forEach(post => {
+          updatedTimes[post._id] = calculateTimeElapsed(post.updatedAt);
+        });
+        return updatedTimes;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [posts]);
+
+  const calculateTimeElapsed = (updatedAt) => {
+    const updatedMoment = moment.utc(updatedAt);
+    const nowMoment = moment.utc();
+    return formatTime(nowMoment.diff(updatedMoment, 'seconds'));
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes > 0 ? `${minutes}m ` : ""}${remainingSeconds}s`;
   };
 
   const openGoogleMaps = (location) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location)}`;
-  
-    Linking.canOpenURL(url).then(supported => {
+    Linking.canOpenURL(url).then((supported) => {
       if (supported) {
         Linking.openURL(url);
       } else {
-        Alert.alert('Error', 'Unable to open Google Maps.');
+        Alert.alert("Error", "Unable to open Google Maps.");
       }
     });
   };
-
-  const [timeSincePost, setTimeSincePost] = useState(0);
-
-  // Timer to update the time elapsed since the post was created
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeSincePost((prevTime) => prevTime + 1); // Increment the counter every second
-    }, 1000);
-
-    return () => clearInterval(interval); // Clear the interval when the component unmounts
-  }, []);
-
-  // Function to convert seconds to minutes and seconds
-  const Time = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes > 0 ? ` ${minutes} :` : ""} ${seconds}`;
-  };
+  const endvol = async(endvol)=>{
+    const data = {
+      endvol
+    };
+    console.log(endvol)
+    const { error,message, isError } = await postReq('/user/endvol', data);
+   
+    isError ? alert(message) : navigate(PATHS.Volunteer)
+  }
 
   return (
-  
-      <View style={styles.postContainer}>
-        <View style={styles.header}>
-          <View style={styles.userInfo}>
-            <Image source={{ uri: post.profile.imageUrl }} style={styles.profileImage} />
+    <ScrollView style={styles.container}>
+      {posts.map((post) => (
+        <View key={post._id} style={styles.postContainer}>
+          <View style={styles.header}>
+            <View style={styles.userInfo}>
+              <Image
+                style={styles.profileImage}
+                source={{
+                  uri: user.profileImage
+                    ? `${PATHS.BASEURL}${user.profileImage}`
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s"
+                }}
+                accessibilityLabel="Profile Image"
+              />
+              <View>
+                <Text style={styles.username}>{post.user.name}</Text>
+                <Text style={styles.date}>{new Date(post.createdAt).toDateString()}</Text>
+              </View>
+            </View>
             <View>
-              <Text style={styles.username}>{post.profile.username}</Text>
-              <Text style={styles.date}>{new Date(post.date).toDateString()}</Text>
+              <Text style={styles.texttype}>Volunteer</Text>
+              <Text style={styles.timeCounter}>Time: {timeSincePosts[post._id] || "Calculating..."}</Text>
             </View>
           </View>
-          <View>
-            <Text style={styles.texttype}>  Volunteer </Text>
-            <Text style={styles.timeCounter}>Time: {Time(timeSincePost)}</Text>
+          <Text style={styles.postText2}>{post.foodName}</Text>
+          <Text style={styles.postText}>{post.description}</Text>
+        
+          {post.imgUri && <Image source={{ uri: `${PATHS.BASEURL}${post.imgUri}`  }}  style={styles.postImage} />}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={() => openGoogleMaps(post.location)} style={styles.button}>
+              <FontAwesome name="map-marker" size={28} color="white" />
+              <Text style={styles.buttonText}>Open in Maps</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={()=>endvol(post._id)}>
+              <Text style={styles.buttonText}>End Volunteer</Text>
+            </TouchableOpacity>
           </View>
         </View>
-
-        {/* Post Content */}
-        <Text style={styles.postText}>{post.description}</Text>
-        <Image source={{ uri: post.postImg }} style={styles.postImage} />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => openGoogleMaps(post.location)} style={styles.button}>
-            <FontAwesome name="map-marker" size={28} color='white' />
-            <Text style={styles.buttonText}>Open in Maps</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>End Volunteer</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
+      ))}
+      <View style={{height:90}}></View>
+    </ScrollView>
   );
 }
 
@@ -101,7 +138,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     elevation: 5,
-    marginTop:60
+    marginTop: 60,
   },
   header: {
     flexDirection: "row",
@@ -134,16 +171,22 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontSize: 14,
-    marginVertical: 10,
+    marginVertical: 6,
+  },
+  postText2: {
+    fontSize: 18,
+    fontWeight:600,
+    marginVertical: 6,
   },
   postImage: {
     width: "100%",
-    height: 300,
+    height: 350,
     borderRadius: 10,
   },
   texttype: {
-    fontWeight: "800",
+    fontWeight: "600",
     fontSize: 16,
+    marginLeft:15
   },
   buttonContainer: {
     marginTop: 20,
@@ -153,14 +196,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    backgroundColor: "#f0f0f0",
     borderRadius: 5,
     marginBottom: 10,
-    backgroundColor: PATHS.mainColor
+    backgroundColor: PATHS.mainColor,
   },
   buttonText: {
     marginLeft: 10,
     fontSize: 16,
-    color:'white'
+    color: "white",
   },
 });

@@ -3,43 +3,10 @@ import { useUserSessions } from "../../hooks/useUserSessions";
 import { useNavigate } from "react-router-native"; 
 import { PATHS } from "@/constants/pathConstants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {useState} from "react";
+import {useState,useEffect} from "react";
 import Post from "../component/Post";
 import AddStory from "../component/AddStory";
-const postsData = [
-  {
-      profile: {
-          _id: "67988e9738ae8ff4cd31b296", 
-          username: "Sanam shrestha",
-          imageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-      },
-      postText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      postImageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",       },
-  {
-      profile: {
-          _id: "67988e9738ae8ff4cd31b296",
-          username: "Sanam shrestha",
-          imageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-      },
-      postText: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      postImageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",       },
-  {
-      profile: {
-          _id: "67988e9738ae8ff4cd31b296",
-          username: "Sanam shrestha",
-          imageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-      },
-      postText: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      postImageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",       },
-  {
-      profile: {
-          _id: "67988e9738ae8ff4cd31b296",
-          username: "Sanam shrestha",
-          imageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-      },
-      postText: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-      postImageUrl: "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",       },
-]
+import {getReq} from '../../hooks/useQuery'
 
 export default function Profile() {
   const [visible, setVisible] = useState(false);
@@ -48,7 +15,28 @@ export default function Profile() {
   if (!isLoading && !user) {
     navigate(PATHS.LOGIN);
   }
+  const [post , setpost]=useState([]);
+  const [userHours , setuserHours]=useState('');
 
+      const fetchData = async () => {
+          try {
+              const response = await getReq('/user/getpost?type=user');
+              setpost(response.data.post)
+              setuserHours(response.data.userHours)
+          } catch (error) {
+              console.error("Error fetching account data:", error);
+          }
+      };
+  
+      useEffect(() => {
+          fetchData();
+      }, []);
+
+      const formatTime = (minutes) => {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return `${hours > 0 ? `${hours}h ` : ""}${remainingMinutes} m`;
+      };
   return (
     <ScrollView style={styles.container}>
       {/* Profile Section */}
@@ -56,7 +44,7 @@ export default function Profile() {
         <Image
           style={styles.profileImage}
           source={{
-            uri: 'https://img.freepik.com/premium-vector/hipster-frofile-hat-with-glasses_6229-762.jpg',
+           uri: user?.profileImage ? `${PATHS.BASEURL}${user.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s"
           }}
         />
         <Text style={styles.profileName}>{user?.name}</Text>
@@ -85,13 +73,14 @@ export default function Profile() {
         <View style={styles.statBox}>
           <FontAwesome name="handshake-o" style={styles.statIcon} />
           <Text style={styles.statText}>Volunteer Hours</Text>
-          <Text style={styles.statValue}>25 hours</Text>
+          <Text style={styles.statValue}>{formatTime(userHours)}</Text>
         </View>
       </View>
 
       {/* Modals */}
-      <AddStory visible={visible} setVisible={setVisible} />
-      <Post postsData={postsData} />
+      <AddStory visible={visible} setVisible={setVisible} user={user} />
+      <Post postsData={post} />
+   
     </ScrollView>
   );
 }

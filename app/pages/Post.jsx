@@ -75,6 +75,8 @@ export default function Post() {
           formData={formData} 
           handleInputChange={handleInputChange} 
           fetchImage={fetchImage} 
+          user={user}
+          navigate={navigate}
           
         />
       ) : (
@@ -82,7 +84,8 @@ export default function Post() {
           formData={formData} 
           handleInputChange={handleInputChange} 
           fetchImage={fetchImage}
-         
+          user={user}
+          navigate={navigate}
         />
       )}
     </ScrollView>

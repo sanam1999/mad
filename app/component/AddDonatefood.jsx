@@ -4,7 +4,8 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { PATHS } from "@/constants/pathConstants";
 import * as Location from "expo-location";
 
-const AddDonateFood = ({ formData, handleInputChange, fetchImage }) => {
+
+const AddDonateFood = ({ formData, handleInputChange, fetchImage, user,navigate }) => {
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -18,11 +19,41 @@ const AddDonateFood = ({ formData, handleInputChange, fetchImage }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handlePost = () => {
-    if (validateForm()) {
-      // Perform post action (API call, navigation, etc.)
-      console.log("Form submitted successfully!");
-      // navigate(PATHS.PROFILE);
+  const handleFormSubmit = async () => {
+    const isValid = validateForm();
+    if (!isValid) return;
+
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("foodName", formData.foodName);
+    formDataToSend.append("location", formData.location);
+    formDataToSend.append("quantity", formData.quantity);
+    if (formData.postImg?.uri) {
+      formDataToSend.append("postImg", {
+        uri: formData.postImg.uri,
+        name: formData.postImg.fileName ,
+        type: formData.postImg.mimeType ,
+      });
+    }
+
+    try {
+      const response = await fetch(`${PATHS.BASEURL}/user/foodpost?id=${user._id}`, {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      const result = await response.json(); // Handle the response as JSON
+
+      if (response.ok) {
+        alert("Post submitted successfully!");
+        navigate(PATHS.PROFILE)
+      } else {
+        alert("Error: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting post:", error);
+      alert("Failed to submit post. Please try again.");
     }
   };
 
@@ -55,7 +86,7 @@ const AddDonateFood = ({ formData, handleInputChange, fetchImage }) => {
         style={styles.textInput}
         placeholder="Food Name (e.g., Vegetable Soup)"
         value={formData.foodName}
-        onChangeText={(value) =>  handleInputChange("foodName", value)}
+        onChangeText={(value) => handleInputChange("foodName", value)}
       />
       {errors.foodName && <Text style={styles.errorText}>{errors.foodName}</Text>}
 
@@ -102,12 +133,10 @@ const AddDonateFood = ({ formData, handleInputChange, fetchImage }) => {
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.submitbtn} onPress={handlePost}>
+      <TouchableOpacity style={styles.submitbtn} onPress={handleFormSubmit}>
         <Text style={styles.text}>Post</Text>
       </TouchableOpacity>
-      <Text></Text>
-      <Text></Text>
-      <Text></Text>
+      <View style={{marginBottom:100}}></View>
     </>
   );
 };
@@ -162,8 +191,10 @@ const styles = StyleSheet.create({
   },
   submitbtn: {
     backgroundColor: PATHS.mainColor,
+    
     padding: 10,
     borderRadius: 10,
+    marginTop:20
   },
   text: {
     color: "white",

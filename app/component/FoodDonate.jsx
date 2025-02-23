@@ -5,29 +5,32 @@ import Dialog from "react-native-dialog";
 import { useUserSessions } from "@/hooks/useUserSessions";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigate } from "react-router-native";
-
+import { getReq } from '../../hooks/useQuery';
 export default function FoodVolunteer({ foodPosts }) {
   const { user, isLoading } = useUserSessions();
   const [visible, setVisible] = useState(false);
   const [location, setlocation] = useState("")
-  const [donate, setDonate] = useState({ doname: "", donameamount: 0 });
+  const [donate, setDonate] = useState("");
   let navigate = useNavigate();
 
 
     
   const donatenow = (userid,locatio) => {
-    setDonate({ ...donate, doname: userid });
+    setDonate(userid);
     setlocation(locatio)
     setVisible(true);
   };
 
   const handleSubmit = () => {
-    console.log(donate);
-    setVisible(false);
-    setDonate({ ...donate, doname: "", donameamount: 0 });
-    navigate(PATHS.ACTIVEVOLUNTEERL);
-
-
+    getReq(`/user/volunteer?postid=${donate}`)
+    .then(data => {
+      console.log(data)
+      navigate(PATHS.ACTIVEVOLUNTEERL);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+   
 
   };
 
@@ -45,39 +48,60 @@ export default function FoodVolunteer({ foodPosts }) {
       }
     });
   };
+ 
   return (
     <>
       {foodPosts?.map((post, index) => (
         <View key={index} style={styles.postContainer}>
-          {/* Header Section */}
+        
           <View style={styles.header}>
             <View style={styles.userInfo}>
               <Image
-                source={{ uri: post.profile.imageUrl }}
+                source={{ uri: post.user?.profileImage ? `${PATHS.BASEURL}${post.user.profileImage}` :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s" }}
                 style={styles.profileImage}
               />
               <View>
-                <Text style={styles.username}>{post.profile.username}</Text>
+                <Text style={styles.username}>{post.user.name}</Text>
                 <Text style={styles.date}>
-                  {new Date(post.date).toLocaleDateString()}
+                {new Date(post.createdAt).toLocaleString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+})}
+
                 </Text>
               </View>
             </View>
-            {post.picupuser_id ? (
-              <View style={styles.takenContainer}>
-                <Text style={styles.takenText}>Food Taken</Text>
-              </View>
-            ) : (
-              <TouchableOpacity
-                style={styles.volunteerButton}
-                onPress={() => donatenow(post.post_id, post.location)}
-              >
-                <Text style={styles.volunteerButtonText}>Volunteer</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+            {post.voluser &&  post.voluser != user._id || post.poststaus == "Taken" ? (
+  <View style={styles.takenContainer}>
+    <Text style={styles.takenText}>Food Taken</Text>
+  </View>
+) : post.voluser === user._id ? (
+  <TouchableOpacity
+    style={styles.volunteerButton}
+    onPress={() => navigate(PATHS.ACTIVEVOLUNTEERL)}
+  >
+    <Text style={styles.volunteerButtonText}>{post.poststaus}</Text>
+  </TouchableOpacity>
+) : (
+  <TouchableOpacity
+    style={styles.volunteerButton}
+    onPress={() => donatenow(post._id, post.location)}
+  >
+    <Text style={styles.volunteerButtonText}>{post.poststaus}</Text>
+  </TouchableOpacity>
+)}
 
-          {/* Food Details Section */}
+          </View>
+         
+         
+        
+
+
+
+
           <View style={styles.foodDetails}>
             <View style={styles.foodDetailslist}>
             <Text style={styles.foodName}>{post.foodName}</Text>
@@ -96,14 +120,16 @@ export default function FoodVolunteer({ foodPosts }) {
     </TouchableOpacity>
           </View>
 
-          {/* Post Description */}
+          
           <Text style={styles.postDescription}>{post.description}</Text>
 
-          {/* Post Image */}
-          {post.postImg && (
-            <Image source={{ uri: post.postImg }} style={styles.postImage} />
+        
+          {post.imgUri && (
+            <Image source={{ uri: `${PATHS.BASEURL}${post.imgUri}` }} style={styles.postImage} />
           )}
+          
         </View>
+        
       ))}
 
       {/* Donation Dialog */}
@@ -134,6 +160,7 @@ export default function FoodVolunteer({ foodPosts }) {
     style={styles.dialogDonateButton}
   />
 </Dialog.Container>
+<View style={{height:90}}></View>
     </>
   );
 }
@@ -234,7 +261,7 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: "100%",
-    height: 300,
+    height: 350,
     borderRadius: 10,
     marginBottom: 12,
   },

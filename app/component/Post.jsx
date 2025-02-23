@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { PATHS } from "@/constants/pathConstants";
 import Dialog from 'react-native-dialog';
 import { useUserSessions } from "@/hooks/useUserSessions";
-
+import {postReq} from '../../hooks/useQuery'
 export default function Post({ postsData }) {
   const { user, isLoading } = useUserSessions();
   const [visible, setVisible] = useState(false);
@@ -14,10 +14,20 @@ export default function Post({ postsData }) {
     setVisible(true);
   };
 
-  const handleSubmit = () => {
-    console.log(donate);
-    setVisible(false);
-    setDonate({ ...donate, doname: "", donameamount: 0 });
+  const handleSubmit = async() => {
+    console.log(donate)
+    try{
+    const {data , error , isError} = await postReq('/user/donate', donate);
+    if(!isError){
+      alert("Donate successful")
+      setVisible(false);
+      setDonate({ ...donate, doname: "", donameamount: 0 });
+    }else{
+        alert(error)
+    }
+} catch (error) {
+    alert(error);
+}
   };
 
   if (isLoading) {
@@ -32,32 +42,39 @@ export default function Post({ postsData }) {
           <View style={styles.header}>
             <View style={styles.userInfo}>
               <Image
-                source={{ uri: post.profile.imageUrl }}
+                source={{  uri: post.user?.profileImage ? `${PATHS.BASEURL}${post.user.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s" }}
                 style={styles.profileImage}
               />
               <View>
-                <Text style={styles.username}>{post.profile.username}</Text>
-                <Text style={styles.date}>2020-02-90</Text>
+                <Text style={styles.username}>{post.user?.name}</Text>
+               
+                <Text style={styles.date}> {new Date(post.createdAt).toLocaleString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+})}</Text>
               </View>
             </View>
-            {user._id === post.profile._id ? (
+            {user._id === post.user?._id ? (
               <View style={styles.donationInfo}>
-                <Text style={styles.totalDonation}>Total donated: $200</Text>
+                <Text style={styles.totalDonation}>Total donated: ${post.totaldonate || 0}</Text>
               </View>
             ) : (
               <TouchableOpacity
                 style={styles.donateButton}
-                onPress={() => donatenow(post.profile._id)}
+                onPress={() => donatenow(post._id)}
               >
                 <Text style={styles.donateButtonText}>Donate now</Text>
               </TouchableOpacity>
             )}
           </View>
 
-          {/* Post Content */}
-          <Text style={styles.postText}>{post.postText}</Text>
+
+          <Text style={styles.postText}>{post.Title}</Text>
           <Image
-            source={{ uri: post.postImageUrl }}
+            source={{ uri: `${PATHS.BASEURL}${post.imgUri}` }}
             style={styles.postImage}
           />
 
@@ -92,6 +109,7 @@ export default function Post({ postsData }) {
           style={styles.dialogDonateButton}
         />
       </Dialog.Container>
+      <View style={{height:90}}></View>
     </View>
   );
 }

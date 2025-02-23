@@ -1,6 +1,15 @@
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Alert,
+} from "react-native";
 import { useUserSessions } from "../../hooks/useUserSessions";
 import { useNavigate } from "react-router-native";
 import { PATHS } from "@/constants/pathConstants";
@@ -9,68 +18,73 @@ export default function UpdateProfile() {
   const navigate = useNavigate();
   const { user, isLoading, editUser } = useUserSessions();
 
+  // State variables
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [profileImg, setProfileImg] = useState(null);
+  const [isProfileImgChanged, setIsProfileImgChanged] = useState(false);
 
+  // Populate form fields with user data
+  useEffect(() => {
+    if (user) {
+      setName(user.name || "");
+      setEmail(user.username || "");
+      setProfileImg(user.profileImage ? { uri: `${PATHS.BASEURL}${user.profileImage}` } : null);
+    }
+  }, [user]);
+
+  // Show loading state
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <Text style={styles.loadingText}>Loading...</Text>;
   }
 
+  // Redirect to login if user is not logged in
   if (!user) {
     navigate(PATHS.LOGIN);
     return null;
   }
 
-
-
+  // Handle profile update
   const handleUpdateProfile = async () => {
-    if (!name || !email) {
-      alert("Name and email cannot be empty.");
-      return;
-    }
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", name);
+    formDataToSend.append("username", email);
 
-    // Prepare form data to send to the server
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-
-    // Only append the image if it's selected
-    if (profileImg) {
-      formData.append("profileimg", {
+    if (isProfileImgChanged && profileImg) {
+      formDataToSend.append("profileImg", {
         uri: profileImg.uri,
-        type: profileImg.type,
-        name: "profile-image.jpg", 
+        name: profileImg.fileName || "profile.jpg",
+        type: profileImg.mimeType || "image/jpeg",
       });
     }
 
     try {
-      const response = await fetch( PATHS.BASEURL+"/user/updateProfile", {
+      const response = await fetch(`${PATHS.BASEURL}/user/updateProfile?id=${user._id}`, {
         method: "POST",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: formDataToSend,
       });
 
-      const result = await response.json();
+      const textResponse = await response.text();
+      const result = JSON.parse(textResponse);
 
-      // if (response.ok) {
-      //   editUser({ name, email, profileimg: result.profileImgPath });
-      //   alert("Profile updated successfully!");
-      // } else {
-      //   alert(`Failed to update profile: ${result.message || "Unknown error"}`);
-      // }
+      if (response.ok) {
+        Alert.alert("Success", "Profile updated successfully!");
+        await editUser(result.user);
+        navigate(PATHS.PROFILE);
+      } else {
+        Alert.alert("Error", result.message || "Something went wrong.");
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("There was an error updating your profile.");
+      Alert.alert("Failed to update profile. Please try again.");
     }
   };
 
+  // Handle image upload
   const updateImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      alert("Permission to access media library is required!");
+      Alert.alert("Permission Denied", "Permission to access media library is required!");
       return;
     }
 
@@ -80,9 +94,14 @@ export default function UpdateProfile() {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setProfileImg(result.assets[0]); // Store the selected image
-
+    if (!result.canceled && result.assets.length > 0) {
+      const selectedImage = result.assets[0];
+      setProfileImg({
+        uri: selectedImage.uri,
+        fileName: selectedImage.fileName || "profile.jpg",
+        mimeType: selectedImage.mimeType || "image/jpeg",
+      });
+      setIsProfileImgChanged(true); // Mark the image as changed
     }
   };
 
@@ -100,6 +119,7 @@ export default function UpdateProfile() {
             placeholder="Enter your name"
           />
         </View>
+
         <View style={styles.section}>
           <Text style={styles.label}>Email</Text>
           <TextInput
@@ -109,29 +129,27 @@ export default function UpdateProfile() {
             placeholder="Enter your email"
           />
         </View>
+
         <View style={styles.section}>
           <Text style={styles.label}>Profile Image</Text>
-          {profileImg ? (
-            <Image source={{ uri: profileImg.uri }} style={styles.profileImage} />
-          ) : (
-            <Text style={styles.placeholder}>No Image Uploaded</Text>
-          )}
+          {profileImg && <Image source={{ uri: profileImg.uri }} style={styles.profileImage} />}
           <TouchableOpacity
             style={[styles.button, styles.buttonMedium]}
             onPress={updateImage}
           >
             <Text style={styles.buttonText}>Upload Image</Text>
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonWide]}
-          onPress={handleUpdateProfile}
-        >
-          <Text style={styles.buttonText}>Save Profile</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
-  );
+          </View>
+
+<TouchableOpacity
+  style={[styles.button, styles.buttonWide]}
+  onPress={handleUpdateProfile}
+>
+  <Text style={styles.buttonText}>Save Profile</Text>
+</TouchableOpacity>
+</ScrollView>
+</View>
+);
 }
 
 const styles = StyleSheet.create({

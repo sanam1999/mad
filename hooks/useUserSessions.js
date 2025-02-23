@@ -24,6 +24,8 @@ export const useUserSessions = () => {
 
   const editUser = async (userdata) => {
     try {
+
+      console.log("update user data in sesstion ")
       if (userdata) {
         await AsyncStorage.setItem("userSession", JSON.stringify(userdata));
         setUser(userdata); // Use userdata directly
