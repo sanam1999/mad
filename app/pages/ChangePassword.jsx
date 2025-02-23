@@ -29,11 +29,11 @@ export default function ChangePassword() {
       };
       const { data, error, isError, message } = await postReq("/user/changepassword", userData);
       if (!isError) {
-        console.log(data);
+ 
         alert("Password updated successfully!");
         navigate(PATHS.SETTING);
       } else {
-        console.log("Error:", message);
+      
         alert(message);
       }
     } catch (err) {

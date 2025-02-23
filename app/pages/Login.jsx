@@ -36,10 +36,10 @@ export default function Login() {
                 };
                 const {data , error , isError} = await postReq('/user/login', userData);
                 if(!isError){
-                    console.log(data)
+                   
                     alert("Welcome Back "+ data.user.name)
                     await AsyncStorage.setItem('userSession', JSON.stringify(data.user));
-                    console.log(data)
+                  
                     navigate('/');
                 }else{
                   

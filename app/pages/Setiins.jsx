@@ -30,7 +30,7 @@ export default function Setiins() {
                             await AsyncStorage.removeItem("userSession")
                             navigate("/")  
                         }else{
-                            console.log(response)
+                         
                         }
                             
                          
@@ -43,7 +43,7 @@ export default function Setiins() {
              
 
         } catch (e) {
-            console.log(e);
+   
         }
     };
     if(!isLoading){

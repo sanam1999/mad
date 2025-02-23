@@ -7,6 +7,7 @@ import {useState,useEffect} from "react";
 import Post from "../component/Post";
 import AddStory from "../component/AddStory";
 import {getReq} from '../../hooks/useQuery'
+import FoodVolunteer from "../component/FoodDonate";
 
 export default function Profile() {
   const [visible, setVisible] = useState(false);
@@ -16,12 +17,15 @@ export default function Profile() {
     navigate(PATHS.LOGIN);
   }
   const [post , setpost]=useState([]);
+  const [food , setfood]=useState([]);
   const [userHours , setuserHours]=useState('');
-
+  
+    const [selected, setSelected] = useState('Post');
       const fetchData = async () => {
           try {
               const response = await getReq('/user/getpost?type=user');
               setpost(response.data.post)
+              setfood(response.data.food)
               setuserHours(response.data.userHours)
           } catch (error) {
               console.error("Error fetching account data:", error);
@@ -79,8 +83,23 @@ export default function Profile() {
 
       {/* Modals */}
       <AddStory visible={visible} setVisible={setVisible} user={user} />
-      <Post postsData={post} />
-   
+      <View style={styles.container1}>
+      <View style={styles.toggleContainer}>
+        <TouchableOpacity
+          style={[styles.button, selected === 'Post' && styles.selected]}
+          onPress={() => setSelected('Post')}
+        >
+          <Text style={[styles.text, selected === 'Post' && styles.selectedText]}>Post</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, selected === 'Food' && styles.selected]}
+          onPress={() => setSelected('Food')}
+        >
+          <Text style={[styles.text, selected === 'Food' && styles.selectedText]}>Food</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+     {selected == 'Post' ? <Post postsData={post} /> :  <FoodVolunteer foodPosts={food}/> } 
     </ScrollView>
   );
 }
@@ -187,5 +206,34 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#ffffff',
     marginTop: 5,
+  },
+  container1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:10
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 25,
+    padding: 3,
+    borderWidth:1
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+  },
+  selected: {
+    backgroundColor: PATHS.mainColor,
+  },
+  text: {
+    fontSize: 16,
+    color: '#888',
+  },
+  selectedText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

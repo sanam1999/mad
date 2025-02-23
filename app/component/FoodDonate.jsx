@@ -24,11 +24,10 @@ export default function FoodVolunteer({ foodPosts }) {
   const handleSubmit = () => {
     getReq(`/user/volunteer?postid=${donate}`)
     .then(data => {
-      console.log(data)
       navigate(PATHS.ACTIVEVOLUNTEERL);
     })
     .catch(e => {
-      console.log(e);
+
     });
    
 

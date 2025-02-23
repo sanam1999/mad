@@ -247,7 +247,7 @@ function Request(props) {
             setwalletid(data.data.data.walletid);
           })
           .catch(e => {
-            console.log(e);
+
           });
       }
     }, [props.visibleQ]); // Fetch data only when `props.visibleQ` changes

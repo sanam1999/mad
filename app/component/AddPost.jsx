@@ -39,7 +39,7 @@ export default function AddPost({ formData, handleInputChange, fetchImage,user, 
       });      
   
       const textResponse = await response.text();
-      console.log("Raw response:", textResponse); // Debugging
+
   
       const result = JSON.parse(textResponse);
       if (response.ok) {

@@ -27,7 +27,7 @@ export default function ActiveVolunteer() {
           setTimeSincePosts(initialTimes);
         })
         .catch((e) => {
-          console.log(e);
+
           Alert.alert("Error", "Failed to fetch posts.");
         });
     }
@@ -73,7 +73,7 @@ export default function ActiveVolunteer() {
     const data = {
       endvol
     };
-    console.log(endvol)
+
     const { error,message, isError } = await postReq('/user/endvol', data);
    
     isError ? alert(message) : navigate(PATHS.Volunteer)

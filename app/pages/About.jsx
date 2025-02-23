@@ -17,14 +17,14 @@ export default function About() {
 
   const teamMembers = [
     { 
-      name: 'Sarah Johnson',
+      name: 'Senvith',
       role: 'Lead Developer',
       uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDRlp-KGr_M94k_oor4Odjn2UzbAS7n1YoA&s'
     },
     { 
-      name: 'Michael Chen',
+      name: 'Nethmi',
       role: 'Project Manager',
-      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDRlp-KGr_M94k_oor4Odjn2UzbAS7n1YoA&s'
+      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaXQoo21z972uS-JHDFnD7PDQC7gJocS8U32FugISogE6JnvceTKmlYE9FMdalmbbwkbo&usqp=CAU'
     }
   ];
 

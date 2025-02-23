@@ -46,11 +46,11 @@ export default function Signup() {
                     Email,
                     Password,
                 };
-                console.log("1")
+   
                 const {data , error , isError} = await postReq('/user/signup', userData);
                 if(!isError){
                     await AsyncStorage.setItem('userSession', JSON.stringify(data.user));
-                    console.log(data.user)
+       
                     alert("Welcome "+ Name)
                     navigate('/');
                 }else{

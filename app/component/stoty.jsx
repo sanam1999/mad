@@ -1,98 +1,31 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Modal, ActivityIndicator, ScrollView } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Modal} from 'react-native';
+import {getReq} from '../../hooks/useQuery'
+import { PATHS } from '@/constants/pathConstants';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 export default function Story() {
   const [selectedStory, setSelectedStory] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [stories , setstory]= useState([]);
+     const fetchData = async () => {
+          try {
+              const response = await getReq('/user/getstory');
+            
+              setstory(response.data.story)
+            
+             
+          } catch (error) {
+              console.error("Error fetching account data:", error);
+          }
+      };
+  
+      useEffect(() => {
+          fetchData();
+      }, []);
 
 
 
-  const stories = [
-    {
-      id: '1',
-      username: 'Saroj Shrestha',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
-      ],
-    },
-    {
-      id: '2',
-      username: 'Sanam',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
-      ],
-    },
-    {
-      id: '3',
-      username: 'Saroj Shrestha',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
-      ],
-    },
-    {
-      id: '4',
-      username: 'Sanam',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
-      ],
-    },
-    {
-      id: '5',
-      username: 'Saroj Shrestha',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
-      ],
-    },
-    {
-      id: '6',
-      username: 'Sanam',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
-      ],
-    },
-    {
-      id: '7',
-      username: 'Saroj Shrestha',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
-      ],
-    },
-    {
-      id: '8',
-      username: 'Sanam',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
-      ],
-    },
-    {
-      id: '9',
-      username: 'Saroj Shrestha',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'First Story', timestamp: '2025-01-21T10:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Second Story', timestamp: '2025-01-21T11:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Third Story', timestamp: '2025-01-21T12:00:00Z' },
-      ],
-    },
-    {
-      id: '10',
-      username: 'Sanam',
-      storyImages: [
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Morning Vibes', timestamp: '2025-01-21T08:00:00Z' },
-        { url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNgFqyr9SHg5eyoLtN6wsRId1TfS8h94jCvg&s', caption: 'Afternoon Break', timestamp: '2025-01-21T14:00:00Z' },
-      ],
-    },
-  ];
+ 
 
   const renderStory = ({ item }) => (
     <TouchableOpacity onPress={() => {
@@ -100,14 +33,14 @@ export default function Story() {
       setCurrentIndex(0); // Start from the first story image
     }}>
       <View style={styles.storyContainer}>
-        <Image source={{ uri: item.storyImages[0].url }} style={styles.storyImage} />
-        <Text style={styles.username}>{item.username}</Text>
+        <Image source={{ uri: `${PATHS.BASEURL}${item.story[0].imgUri}` }} style={styles.storyImage} />
+        <Text style={styles.username}>{item.user.name}</Text>
       </View>
     </TouchableOpacity>
   );
 
   const handleNextStory = () => {
-    if (currentIndex < selectedStory.storyImages.length - 1) {
+    if (currentIndex < selectedStory.story.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
       setSelectedStory(null);
@@ -131,6 +64,7 @@ export default function Story() {
         renderItem={renderStory}
         showsHorizontalScrollIndicator={false}
       />
+     
 
       {/* Full-Screen Modal */}
       {selectedStory && (
@@ -142,14 +76,14 @@ export default function Story() {
         >
           <View style={styles.modalContainer}>
             <TouchableOpacity style={styles.navButtonLeft} onPress={handlePreviousStory}>
-              <Text style={styles.navButtonText}>{'<'}</Text>
+              <Text style={styles.navButtonText}> <FontAwesome name="arrow-left"  style={styles.icons} /></Text>
             </TouchableOpacity>
 
-            <Image source={{ uri: selectedStory.storyImages[currentIndex].url }} style={styles.fullScreenImage} />
-            <Text style={styles.storyCaption}>{selectedStory.storyImages[currentIndex].caption}</Text>
+            <Image source={{ uri:  `${PATHS.BASEURL}${selectedStory.story[currentIndex].imgUri}`  }} style={styles.fullScreenImage} />
+            <Text style={styles.storycaption}>{selectedStory.story[currentIndex].caption}</Text>
 
             <TouchableOpacity style={styles.navButtonRight} onPress={handleNextStory}>
-              <Text style={styles.navButtonText}>{'>'}</Text>
+              <Text style={styles.navButtonText}><FontAwesome name="arrow-right"  style={styles.icons} /></Text>
             </TouchableOpacity>
           </View>
         </Modal>
@@ -188,11 +122,11 @@ const styles = StyleSheet.create({
   },
   fullScreenImage: {
     width: '90%',
-    height: '70%',
+    height: '80%',
     resizeMode: 'contain',
     borderRadius: 20,
   },
-  storyCaption: {
+  storycaption: {
     color: '#fff',
     fontSize: 16,
     fontStyle: 'italic',
@@ -200,26 +134,27 @@ const styles = StyleSheet.create({
   },
   navButtonLeft: {
     position: 'absolute',
-    left: 10,
+    left: 1,
     top: '50%',
-    transform: [{ translateY: -20 }],
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-    padding: 10,
-    borderRadius: 50,
+    transform: [{ translateY: -20 }],  
+    zIndex:1000
   },
   navButtonRight: {
     position: 'absolute',
-    right: 10,
+    right: 4,
     top: '50%',
     transform: [{ translateY: -20 }],
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-    padding: 10,
-    borderRadius: 50,
+    zIndex:1000
+
   },
   navButtonText: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#000',
   },
+  icons:{
+    fontSize:30,
+    color:PATHS.secColor
+  }
 });
 

@@ -15,7 +15,6 @@ export default function Post({ postsData }) {
   };
 
   const handleSubmit = async() => {
-    console.log(donate)
     try{
     const {data , error , isError} = await postReq('/user/donate', donate);
     if(!isError){
