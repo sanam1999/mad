@@ -16,14 +16,14 @@ export const PATHS = {
 
 
 
-  BASEURL:'http://192.168.115.215:8000',
-  BASE_IMAGe_URL:'http://192.168.79.215:8000/image/',
+  BASEURL:'http://192.168.45.215:8000',
+  BASE_IMAGe_URL:'http://192.168.45.215',
 
 
 
-  mainColor:'#8808AF',
-  secColor:'#FF9800',
-  HIGHLIGHT: '#FFD700'
+  // mainColor:'#8808AF',
+  // secColor:'#FF9800',
+  // HIGHLIGHT: '#FFD700'
 
 
   // mainColor:'#2a2b2a',
@@ -32,9 +32,9 @@ export const PATHS = {
 
  
 
-  // mainColor:'#0a0a0a',
-  // secColor:'#8808AF',
-  // HIGHLIGHT: '#878282'
+  mainColor:'#0a0a0a',
+  secColor:'#8808AF',
+  HIGHLIGHT: '#878282'
 
 
   // mainColor:'#000080',

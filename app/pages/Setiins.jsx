@@ -60,7 +60,7 @@ export default function Setiins() {
                     <Image
                         style={styles.logo}
                         source={{
-                            uri: user.profileImage ? `${PATHS.BASEURL}${user.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s"
+                            uri: user.profileImage ? `${user.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s"
                         }} 
                     />
                     <Text style={styles.email}>{user?.username}</Text>

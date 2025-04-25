@@ -56,7 +56,7 @@ export default function FoodVolunteer({ foodPosts }) {
           <View style={styles.header}>
             <View style={styles.userInfo}>
               <Image
-                source={{ uri: post.user?.profileImage ? `${PATHS.BASEURL}${post.user.profileImage}` :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s" }}
+                source={{ uri: post.user?.profileImage ? post.user.profileImage :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPq_GdHrAfGdnr3cLDeagSc7X_twjR_6Cz9Q&s" }}
                 style={styles.profileImage}
               />
               <View>
@@ -124,7 +124,7 @@ export default function FoodVolunteer({ foodPosts }) {
 
         
           {post.imgUri && (
-            <Image source={{ uri: `${PATHS.BASEURL}${post.imgUri}` }} style={styles.postImage} />
+            <Image source={{ uri: post.imgUri }} style={styles.postImage} />
           )}
           
         </View>

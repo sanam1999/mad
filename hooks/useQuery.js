@@ -2,25 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { PATHS } from '@/constants/pathConstants';
 import axios from 'axios';
 
-export const useCatData = (api) => {
-  api = PATHS.BASEURL + api;
-
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['cat', api],
-    queryFn: async () => {
-      const response = await axios.get(api);
-      return response.data;
-    },
-    enabled: !!api,
-  });
-
-  return { data, isLoading, refetch };
-};
-
 
 
 
 export const postReq = async (api, body) => {
+ 
   try {
     const fullApiUrl = `${PATHS.BASEURL}${api}`;
     const { data } = await axios.post(fullApiUrl, body); 
@@ -41,7 +27,8 @@ export const putReq = async (api, body) => {
 };
 
 
-export const getReq = async (api) => {
+export const getReq = async (api ) => {
+
   try {
     const fullApiUrl = `${PATHS.BASEURL}${api}`;
     const { data } = await axios.get(fullApiUrl);
